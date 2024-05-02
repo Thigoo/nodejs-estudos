@@ -17,16 +17,35 @@ import http from 'node:http';
 
 // Podemos ter duas urls iguais com métodos diferentes
 
+// statefull - depende das infos em memória para funcionamento
+// stateless - geralmente salva os dados externamente ou em arquivos
+
+// JSON - JAvascript Object Notation
+
+// Headers = Cabeçalhos - Requisição e Resposta -> Metadados
+
+const users = [];
+
 const server = http.createServer((req, res) => {
 
     const { method, url } = req;
 
     if(method === 'GET' && url === '/users') {
-        return res.end('Listagem de usuários');
+        return res
+            .setHeader('Content-type', 'application/json')
+            .end(JSON.stringify(users));
     }
 
     if(method === 'POST' && url === '/users') {
-        return res.end('Criação de usuários');
+        
+        users.push({
+            id: 1,
+            name: 'John Doe',
+            email: 'johndoe@email.com'
+        })
+
+        return res.end('Criação de usuário');
+
     }
 
     return res.end('hello world!');
